@@ -1,0 +1,29 @@
+# Secrets and private operational data
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets/
+private/
+# Generated runtimes / validation scratch
+node_modules/
+__pycache__/
+*.py[cod]
+.migration-checks/
+
+# Local-only migrated skills: redistribution rights are not cleared
+/.agents/skills/
+# Migration evidence contains private source paths
+/docs/skill-migration-manifest.json
+/docs/skill-validation.json
+/docs/skill-migration.md
+
+# Build, tests, local tools and setup evidence
+/dist/
+/coverage/
+/.tools/
+/.setup/
+*.tsbuildinfo
+*.log
