@@ -1,6 +1,6 @@
 export type JobSource = 'work24' | 'saramin'
 export interface JobIdentity { readonly source: JobSource; readonly sourceJobId: string }
-export type JobFactField = 'title' | 'company' | 'regions' | 'experienceYears' | 'employmentTypes' | 'skills' | 'salary' | 'closesAt'
+export type JobFactField = 'title' | 'company' | 'roles' | 'regions' | 'experienceYears' | 'employmentTypes' | 'skills' | 'salary' | 'closesAt'
 
 export interface JobSourceReference extends JobIdentity {
   readonly originalUrl: string
@@ -15,6 +15,7 @@ export interface JobPosting {
   readonly sources: readonly JobSourceReference[]
   readonly title: string | null
   readonly company: string | null
+  readonly roles: readonly string[] | null
   readonly regions: readonly string[] | null
   readonly experienceYears: { readonly min: number | null; readonly max: number | null } | null
   readonly employmentTypes: readonly string[] | null

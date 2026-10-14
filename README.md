@@ -1,6 +1,6 @@
 # career-radar
 
-국내 채용공고 자동 수집·조건 비교·무료 AI 근거 분석을 목표로 하는 프로젝트입니다. 현재는 **2단계 개발환경과 최소 대시보드 셸**까지 구성했습니다. 실제 API 수집·분석·저장·이메일·예약 실행은 없습니다.
+국내 채용공고 자동 수집·조건 비교·무료 AI 근거 분석을 목표로 하는 프로젝트입니다. 현재 **사람인 신청 완료·승인 대기**이며, 고용24 일반 채용정보 API는 개인회원 이용 불가로 MVP에서 제외했습니다. 수집·비공개 Sheets 저장·예약 어댑터를 오프라인 검증했고, 사용자 제공 Google 실행 로그에서 승인 전 보류·수집 0건을 확인했습니다. 실제 인증 수집·공고 저장·예약·AI·메일 실행은 아직 없습니다.
 
 ## 로컬 실행 (Windows PowerShell)
 
@@ -39,18 +39,35 @@ npm run dev
 
 `preview`는 빌드 결과를 로컬에서 확인하는 용도이며 배포가 아닙니다. 의존성 버전은 `package-lock.json`에 고정합니다.
 
-`check`는 typecheck → lint → build → test → 공개 후보 검사를 순서대로 실행합니다. 커밋 직전에는 `npm run check:publish -- --staged`로 실제 스테이징된 전체 파일 내용도 검사합니다.
+`check`는 typecheck → lint → build → Apps Script 패키징 → test → 공개 후보 검사를 순서대로 실행합니다. 커밋 직전에는 `npm run check:publish -- --staged`로 실제 스테이징된 전체 파일 내용도 검사합니다.
 
 ## 구조와 개발 기준
 
 - `src/domain/`: 공고·조건 프로필·분석 결과 타입, 최소 식별자 경계 검증
 - `src/features/dashboard/`, `src/components/`, `src/styles/`: 화면·공통 표시·CSS 토큰
-- `server/collectors/`: 고용24·사람인 수집기 계약
-- `server/pipeline/`: 중복 제거·조건 필터·분석 검증 계약 (구현 전)
+- `server/collectors/`: 사람인 승인 차단 수집기·정규화·공식 이메일 링크 파서와 기존 확장 계약
+- `server/collectors/saramin-normalize.ts`: 공식 JSON 명세 부분집합의 런타임 검증·정규화 (합성 테스트, I/O 없음)
+- `server/pipeline/`: 출처 ID 중복 제거·조건 필터·변경 후보 준비와 향후 분석 검증 계약
+- `automation/apps-script/`: readiness 코드 및 별도의 실제 수집용 Google 어댑터 (Google 실설치 전)
 - `docs/`: [아키텍처](docs/architecture.md), [라이선스 경계](docs/license-boundary.md), [환경 검증](docs/development-setup.md)
 
 제품 기준은 [PRODUCT.md](PRODUCT.md), UI 기준은 [DESIGN.md](DESIGN.md), 작업 지침은 [AGENTS.md](AGENTS.md)입니다. 추가 UI 라이브러리는 설치하지 않았습니다. API 키·개인정보는 프런트엔드 환경변수에도 넣지 않습니다.
 
+## 3단계 자동화 검증
+
+[실사용 가능성·MVP 범위](docs/automation-feasibility.md), [Google 설정 절차](docs/automation-setup.md), [사람인 실행·복구 절차](docs/saramin-operations.md), [공식 알림메일 대안](docs/official-email-fallback.md)에 근거·미확인 사항·사용자 작업을 구분했습니다. 사람인 승인과 저장/전달 권리 확인이 우선이며 무료 Gemini의 개인정보/용도 제한은 별도로 해결해야 합니다.
+
+```sh
+npm run check
+npm run demo:automation
+npm run test:official-examples
+npm run build:apps-script
+```
+
+demo는 합성 입력만 처리합니다. 공식 예시 테스트는 과거 문서의 일부 사실 필드를 재구성한 입력이며 실제 수집 응답이 아닙니다. `build:apps-script`는 `.setup/apps-script`에 Core.gs·Collector.gs·appsscript.json을 생성할 뿐 업로드·호출·예약하지 않습니다. 수집용과 기존 readiness용 매니페스트를 혼용하지 않습니다. `probe:apis`는 사람인의 **키 없는 인증 요구 점검**이며 승인된 수집기가 아닙니다. 실제 키·조건은 비공개 Google Script Properties에만 설정하고 프런트엔드·GitHub에 넣지 않습니다.
+
 ## Git과 라이선스
+
+공개 사이트는 원본 TSX를 그대로 게시하지 않고 GitHub Actions에서 빌드한 `dist`를 배포합니다. [Pages 설정·검증 절차](docs/github-pages.md)를 따릅니다. 현재 배포 설정의 준비와 실제 GitHub 배포 성공은 구분합니다.
 
 원격은 [Ta3h0/career-radar](https://github.com/Ta3h0/career-radar) 공개 저장소이며 기존 README와 커밋 이력을 보존합니다. 이전한 스킬 7개는 라이선스·출처 확인이 끝나지 않아 `.agents/skills/` 전체를 로컬 전용으로 제외했습니다. 클론에 스킬이 없는 것은 의도된 상태입니다. 재배포하려면 먼저 [라이선스 경계](docs/license-boundary.md)를 확인합니다. 앱 코드 자체의 공개 라이선스는 아직 지정하지 않았으며, 보존된 upstream MIT 고지가 앱 전체 라이선스를 의미하지 않습니다.

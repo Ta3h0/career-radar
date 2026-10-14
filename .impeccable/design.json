@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T06:24:32.219Z",
+  "title": "Career Radar dashboard design",
+  "extensions": {
+    "shadows": [],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Control hover and disclosure state changes; removed under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "1200px"
+      },
+      {
+        "name": "stacked-rail",
+        "value": "1100px"
+      },
+      {
+        "name": "mobile-menu",
+        "value": "767px"
+      },
+      {
+        "name": "wide",
+        "value": "1700px"
+      }
+    ]
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "개인 채용 워크스페이스",
+    "overview": "사용자가 선택한 밝은 작업면과 짙은 사이드바. 공고 목록·필터·자동화 상태를 분리하며 현재 데이터 연결 전 상태를 정확하게 표시한다.",
+    "keyCharacteristics": [
+      "Operate mode",
+      "Restrained teal actions",
+      "System Korean sans",
+      "Responsive navigation"
+    ],
+    "rules": [
+      {
+        "name": "Truthful data states",
+        "body": "Absent metrics use a dash; no synthetic jobs appear in the default UI.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Preserve labels and keyboard focus",
+      "Disclose that search filters last only for the current page session"
+    ],
+    "donts": [
+      "Invent collected jobs or analysis results",
+      "Put provider credentials into UI fields"
+    ]
+  }
+}
